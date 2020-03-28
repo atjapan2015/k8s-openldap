@@ -5,7 +5,6 @@ metadata:
   annotations:
     kompose.cmd: kompose convert -f docker-compose.yml
     kompose.version: 1.16.0 (0c01309)
-  creationTimestamp: null
   labels:
     io.kompose.service: phpldapadmin
   name: phpldapadmin
@@ -16,5 +15,3 @@ spec:
     targetPort: 80
   selector:
     io.kompose.service: phpldapadmin
-status:
-  loadBalancer: {}

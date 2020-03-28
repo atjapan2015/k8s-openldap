@@ -1,20 +1,25 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
-  namespace: public-service
   annotations:
     kompose.cmd: kompose convert -f docker-compose.yml
     kompose.version: 1.16.0 (0c01309)
-  creationTimestamp: null
   labels:
     io.kompose.service: phpldapadmin
   name: phpldapadmin
+  namespace: public-service
 spec:
   replicas: 1
-  strategy: {}
+  selector:
+    matchLabels:
+      io.kompose.service: phpldapadmin
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
   template:
     metadata:
-      creationTimestamp: null
       labels:
         io.kompose.service: phpldapadmin
     spec:
@@ -24,10 +29,17 @@ spec:
           value: "false"
         - name: PHPLDAPADMIN_LDAP_HOSTS
           value: ldap-service
-        image: atjapan2015/lam:latest # dotbalo/lam:latest
+        image: atjapan2015/phpldapadmin
+        imagePullPolicy: IfNotPresent
         name: phpldapadmin
         ports:
         - containerPort: 80
+          protocol: TCP
         resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
       restartPolicy: Always
-status: {}
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
