@@ -1,0 +1,17 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/backend-protocol: HTTP
+    nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+  name: openldap
+  namespace: public-service
+spec:
+  rules:
+  - host: openldap.oracle.k8scloud.site
+    http:
+      paths:
+      - backend:
+          serviceName: phpldapadmin
+          servicePort: 8080
