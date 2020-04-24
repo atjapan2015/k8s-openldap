@@ -46,7 +46,7 @@ objectclass: organizationalPerson
 objectclass: inetOrgPerson
 sn: devops_admin
 uid: devops_admin
-userpassword: {MD5}YyHnv1dKjznrYzS2l7i0AA==
+userpassword: 
 
 # Entry 5: uid=devops_user,ou=people,dc=example,dc=org
 dn: uid=devops_user,ou=people,dc=example,dc=org
@@ -58,40 +58,5 @@ objectclass: organizationalPerson
 objectclass: inetOrgPerson
 sn: devops_user
 uid: devops_user
-userpassword: {MD5}YyHnv1dKjznrYzS2l7i0AA==
+userpassword: 
 
-# Entry 6: uid=devops_xin,ou=people,dc=example,dc=org
-dn: uid=devops_xin,ou=people,dc=example,dc=org
-cn: devops_xin
-mail: devops_xin@example.org
-objectclass: top
-objectclass: person
-objectclass: organizationalPerson
-objectclass: inetOrgPerson
-sn: devops_xin
-uid: devops_xin
-userpassword: {MD5}YyHnv1dKjznrYzS2l7i0AA==
-
-# Entry 7: uid=engchina,ou=people,dc=example,dc=org
-dn: uid=engchina,ou=people,dc=example,dc=org
-cn: engchina
-mail: engchina@example.org
-objectclass: top
-objectclass: person
-objectclass: organizationalPerson
-objectclass: inetOrgPerson
-sn: engchina
-uid: engchina
-userpassword: {MD5}YyHnv1dKjznrYzS2l7i0AA==
-
-# Entry 8: uid=TeacherWhat,ou=people,dc=example,dc=org
-dn: uid=TeacherWhat,ou=people,dc=example,dc=org
-cn: TeacherWhat
-mail: TeacherWhat@example.org
-objectclass: top
-objectclass: person
-objectclass: organizationalPerson
-objectclass: inetOrgPerson
-sn: TeacherWhat
-uid: TeacherWhat
-userpassword: {MD5}CB0O/HXfijGOog9uc2JjgA==
