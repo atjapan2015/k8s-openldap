@@ -1,101 +1,83 @@
-apiVersion: v1
-items:
-- apiVersion: apps/v1
-  kind: Deployment
-  metadata:
-    labels:
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: ldap
+  name: ldap
+  namespace: public-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
       app: ldap
-    name: ldap
-    namespace: public-service
-  spec:
-    replicas: 1
-    selector:
-      matchLabels:
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
         app: ldap
-    strategy:
-      rollingUpdate:
-        maxSurge: 1
-        maxUnavailable: 1
-      type: RollingUpdate
-    template:
-      metadata:
-        labels:
-          app: ldap
-      spec:
-        containers:
-        - args:
-          - --copy-service
-          image: osixia/openldap:1.3.0
-          imagePullPolicy: IfNotPresent
-          livenessProbe:
-            failureThreshold: 10
-            initialDelaySeconds: 20
-            periodSeconds: 10
-            successThreshold: 1
-            tcpSocket:
-              port: openldap
-            timeoutSeconds: 1
-          name: ldap
-          ports:
-          - containerPort: 389
-            name: openldap
-            protocol: TCP
-          - containerPort: 636
-            name: ssl-ldap-port
-            protocol: TCP
-          readinessProbe:
-            failureThreshold: 10
-            initialDelaySeconds: 20
-            periodSeconds: 10
-            successThreshold: 1
-            tcpSocket:
-              port: openldap
-            timeoutSeconds: 1
-          resources: {}
-          terminationMessagePath: /dev/termination-log
-          terminationMessagePolicy: File
-          volumeMounts:
-          - mountPath: /var/lib/ldap
-            name: openldap-data
-            subPath: data
-          - mountPath: /etc/ldap/slapd.d
-            name: openldap-data
-            subPath: config
-          - mountPath: /container/service/slapd/assets/certs
-            name: openldap-data
-            subPath: certs
-          - mountPath: /container/environment/01-custom
-            name: secret-volume
-          - mountPath: /container/run
-            name: container-run
-        dnsPolicy: ClusterFirst
-        restartPolicy: Always
-        schedulerName: default-scheduler
-        securityContext: {}
-        terminationGracePeriodSeconds: 30
-        volumes:
-        - name: openldap-data
-          persistentVolumeClaim:
-            claimName: openldap-data-pvc
-        - name: secret-volume
-          secret:
-            defaultMode: 420
-            secretName: ldap-secret
-        - emptyDir: {}
+    spec:
+      containers:
+      - args:
+        - --copy-service
+        image: osixia/openldap:1.3.0
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 10
+          initialDelaySeconds: 20
+          periodSeconds: 10
+          successThreshold: 1
+          tcpSocket:
+            port: openldap
+          timeoutSeconds: 1
+        name: ldap
+        ports:
+        - containerPort: 389
+          name: openldap
+          protocol: TCP
+        - containerPort: 636
+          name: ssl-ldap-port
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 10
+          initialDelaySeconds: 20
+          periodSeconds: 10
+          successThreshold: 1
+          tcpSocket:
+            port: openldap
+          timeoutSeconds: 1
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /var/lib/ldap
+          name: openldap-data
+          subPath: data
+        - mountPath: /etc/ldap/slapd.d
+          name: openldap-data
+          subPath: config
+        - mountPath: /container/service/slapd/assets/certs
+          name: openldap-data
+          subPath: certs
+        - mountPath: /container/environment/01-custom
+          name: secret-volume
+        - mountPath: /container/run
           name: container-run
-  status: {}
-- apiVersion: v1
-  kind: PersistentVolumeClaim
-  metadata:
-    creationTimestamp: null
-    name: openldap-data-pvc
-    namespace: public-service
-  spec:
-    accessModes:
-    - ReadWriteOnce
-    resources:
-      requests:
-        storage: 1Gi
-    storageClassName: local-path
-    volumeMode: Filesystem
-kind: List
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: openldap-data
+        persistentVolumeClaim:
+          claimName: openldap-data-pvc
+      - name: secret-volume
+        secret:
+          defaultMode: 420
+          secretName: ldap-secret
+      - emptyDir: {}
+        name: container-run
